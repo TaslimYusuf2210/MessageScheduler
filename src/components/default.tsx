@@ -17,11 +17,12 @@ function DefaultPage() {
             <div className="flex justify-between items-end">
                 <p className="text-green-400 transition-all duration-300 hover:font-medium hover:cursor-pointer hover:text-green-600 text-lg">View Tasks List</p>
                 <Button 
+                onClick={() => setIsModalOpen(true)}
                 className="bg-green-400 flex rounded-4xl py-1 px-2 hover:bg-green-600 font-semibold text-white text-lg hover:cursor-pointer">
                 <svg 
                 xmlns="http://www.w3.org/2000/svg" 
-                width="34" 
-                height="34" 
+                width="34px" 
+                height="34px" 
                 viewBox="0 0 24 24">
                 <path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2m0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8m4-9h-3V8a1 1 0 0 0-2 0v3H8a1 1 0 0 0 0 2h3v3a1 1 0 0 0 2 0v-3h3a1 1 0 0 0 0-2"/>
                 </svg>
@@ -38,7 +39,7 @@ function DefaultPage() {
                 <p className="font-medium">Repeat</p>
             </div>
             <div className="grid place-items-center font-medium text-lg space-y-5">
-                <div>
+                <div className="animate-pulse">
                     <img src={illustraion} alt="illus" />
                 </div>
                 <p>
