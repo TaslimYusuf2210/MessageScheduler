@@ -9,11 +9,15 @@ interface ModalProps {
 }
 
 function Modal({isOpen, onClose, children, width = "w-[80%]", height = "h-auto"}: ModalProps) {
+
+
     if (!isOpen) {
         return
     }
     return ( 
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div 
+        className="fixed inset-0 flex items-center justify-center backdrop-blur-lg z-50"
+        >
             <div className={`bg-white rounded-lg shadow-lg relative ${width} ${height} max-h-[90vh] overflow-auto`}>
                 <IoMdClose  
                 onClick={onClose}
