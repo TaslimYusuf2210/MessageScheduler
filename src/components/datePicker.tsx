@@ -10,10 +10,11 @@ import React from "react";
 
 interface PickerProps {
   className: string;
+  disabled: boolean;
   onDateChange: (value: Date | undefined) => void;
 }
 
-function DatePicker({ className = "", onDateChange }: PickerProps) {
+function DatePicker({ className = "", onDateChange, disabled = false }: PickerProps) {
   const today = new Date();
   const [date, setDate] = React.useState<Date | undefined>(today);
 
@@ -37,7 +38,10 @@ function DatePicker({ className = "", onDateChange }: PickerProps) {
     <div className={`${className}`}>
       <Popover>
         <PopoverTrigger asChild>
-          <button className="flex cursor-pointer w-full justify-between">
+          <button 
+          className={`flex cursor-pointer w-full justify-between ${disabled ? "text-gray-300 cursor-not-allowed" : ""}`}
+          disabled={disabled}
+          >
             {formatDate(date)}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -52,17 +56,19 @@ function DatePicker({ className = "", onDateChange }: PickerProps) {
             </svg>
           </button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={handleSelect}
-            required={false}
-            // 🔴 Disables all dates before today
-            disabled={(day) => day < today}
-            autoFocus={true}
-          />
-        </PopoverContent>
+        {!disabled &&
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={handleSelect}
+              required={false}
+              // 🔴 Disables all dates before today
+              disabled={(day) => day < today}
+              autoFocus={true}
+            />
+          </PopoverContent>
+        }
       </Popover>
     </div>
   );
