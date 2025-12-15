@@ -2,6 +2,7 @@ import { Checkbox } from "./ui/checkbox";
 import { useState } from "react";
 import { Switch } from "./ui/switch";
 import DatePicker from "./datePicker";
+import { useEffect } from "react";
 
 
 
@@ -11,16 +12,24 @@ function FrequencySelection() {
   const [finalDate, setFinalDate] = useState<Date | undefined>(new Date())
   const [access, setAccess] = useState(false)
 
+  useEffect(() => {
+    if (!repeat) {
+      setAccess(false)
+      setFinalDate(undefined)
+    } 
+  }, [repeat])
+
 
   function handleSelect(option: string) {
     setSelectedOption(option)
     setAccess(true)
   }
   function handleRepeat() {
+    setSelectedOption(null)
+    setFinalDate(undefined)
     setRepeat((prev) => !prev)
     if (!repeat) {
-      setSelectedOption(null)
-      setFinalDate(undefined)
+      setAccess(false)
     }
     console.log(selectedOption, finalDate);
     
@@ -90,6 +99,7 @@ function FrequencySelection() {
                         <label className="font-medium">Select Final Day <span className="font-light text-gray-300">(Optional)</span></label>
                         <div className={`border rounded-md p-2 ${access ? "" : "cursor-not-allowed "}`}>
                             <DatePicker
+                            dateValue={finalDate}
                             disabled={!access}
                             onDateChange={setFinalDate}
                             className=""

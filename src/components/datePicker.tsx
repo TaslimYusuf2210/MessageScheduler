@@ -12,11 +12,11 @@ interface PickerProps {
   className: string;
   disabled: boolean;
   onDateChange: (value: Date | undefined) => void;
+  dateValue?: Date | undefined
 }
 
-function DatePicker({ className = "", onDateChange, disabled = false }: PickerProps) {
+function DatePicker({ className = "", onDateChange, disabled = false, dateValue }: PickerProps) {
   const today = new Date();
-  const [date, setDate] = React.useState<Date | undefined>(today);
 
   function formatDate(date: Date | undefined) {
     if (!date) return "";
@@ -30,7 +30,7 @@ function DatePicker({ className = "", onDateChange, disabled = false }: PickerPr
   }
 
   function handleSelect(selectedDate: Date | undefined) {
-    setDate(selectedDate)
+    
     onDateChange(selectedDate)   // 🔴 Send date to parent
   }
 
@@ -42,7 +42,7 @@ function DatePicker({ className = "", onDateChange, disabled = false }: PickerPr
           className={`flex cursor-pointer w-full justify-between ${disabled ? "text-gray-300 cursor-not-allowed" : ""}`}
           disabled={disabled}
           >
-            {formatDate(date)}
+            {formatDate(dateValue)}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="25"
@@ -60,7 +60,7 @@ function DatePicker({ className = "", onDateChange, disabled = false }: PickerPr
           <PopoverContent className="w-auto p-0">
             <Calendar
               mode="single"
-              selected={date}
+              selected={dateValue}
               onSelect={handleSelect}
               required={false}
               // 🔴 Disables all dates before today

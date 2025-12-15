@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-function TimePicker({ selectedDate }: { selectedDate: Date | undefined }) {
+interface TimePickerProps  {
+    selectedDate: Date | undefined
+    onTimeChange: (time: string) => void
+}
+
+function TimePicker({ selectedDate, onTimeChange }: TimePickerProps) {
     const [time, setTime] = useState("")
     
     // helper: check if selected date is today
@@ -11,6 +16,12 @@ function TimePicker({ selectedDate }: { selectedDate: Date | undefined }) {
         selectedDate.getMonth() === today.getMonth() &&
         selectedDate.getFullYear() === today.getFullYear()
         )
+    }
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const value = e.target.value
+        setTime(value)
+        onTimeChange(value)
     }
 
     // get current time in "HH:MM" for min attribute
@@ -25,7 +36,7 @@ function TimePicker({ selectedDate }: { selectedDate: Date | undefined }) {
             <input
                 type="time"
                 value={time}
-                onChange={(e) => setTime(e.target.value)}
+                onChange={handleChange}
                 className="h-full w-full outline-none border-none"
                 min={isToday() ? getCurrentTime() : undefined}
             />
