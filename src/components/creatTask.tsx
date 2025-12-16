@@ -37,15 +37,21 @@ function CreateTask() {
   contact: string;
     };
 
+  const platformColors: Record<string, string> = {
+  gmail: "bg-gray-800",
+  whatsapp: "bg-green-400",
+  telegram: "bg-blue-500",
+  slack: "bg-red-500",
+    };
+
   function handleAddRecipient() {
     if (!platform) return
     setRecepient((prev) => [
         ...prev,
         {platform, contact},
     ])
-
+    console.log(recepient);
     setContact("")
-    setPlatform("")
   }
 
 
@@ -62,6 +68,7 @@ function CreateTask() {
     if (!messageTitle) newErrors.typedMessageTitle = "Message Title is required";
     
     setCustomErrors(newErrors)
+    console.log(formData)
     if (Object.keys(newErrors).length > 0) return
   }
 
@@ -186,9 +193,20 @@ function CreateTask() {
               onChange={(e) => setContact(e.target.value)}
               className="p-2 w-full rounded-md border border-gray-200"
             />
-            <button className="bg-green-400 rounded-md text-white py-2 px-4 font-medium">
+            <button onClick={handleAddRecipient}  className="bg-green-400 rounded-md text-white py-2 px-4 font-medium">
               Add
             </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+                {recepient.map((item, index) => (
+                    <span
+                    key={index}
+                    className={`text-white font-medium text-sm px-3 py-1 rounded-full ${platformColors[item.platform]}`}
+                    >
+                        {item.contact}
+                    </span>
+                ))
+                }
           </div>
           {customErrors.selectedRecepient && (
                 <p className="text-red-500 text-sm mt-1">
