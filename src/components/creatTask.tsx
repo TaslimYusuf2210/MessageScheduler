@@ -27,10 +27,21 @@ function CreateTask() {
     selectedDateError?: string;
     selectedTime?: string;
     selectedPlatform?: string;
-    selectedRecepient?: string;
+    selectedRecipient?: string;
     typedMessage?: string;
     typedMessageTitle?: string;
   };
+
+  interface TaskFormData {
+  selectedDate: Date | undefined;
+  time: string;
+  recipients: Recipient[];
+  messageTitle: string;
+  message: string;
+  repeat?: boolean;
+  frequency?: "daily" | "weekly" | "monthly";
+  endDate?: Date | undefined;
+}
 
   type Recipient = {
   platform: Platform;
@@ -44,13 +55,42 @@ function CreateTask() {
   slack: "bg-red-500",
     };
 
+  function normalizeData(data:TaskFormData) {
+    return {
+    ...data,
+    selectedDate: data.selectedDate
+      ? data.selectedDate.toISOString()
+      : null,
+    }
+  }
+
+  function storeMessage(data:TaskFormData, key:string) {
+    const existingData = getDatabase(key)
+    const updatedData = [
+        ...existingData,
+        normalizeData(data),
+    ]
+
+    localStorage.setItem(key, JSON.stringify(updatedData))
+  }
+
+  function getDatabase(key:string) {
+    const rawData = localStorage.getItem(key)
+    if (!rawData) {
+        console.log([])
+        return []
+    }
+    const data = JSON.parse(rawData)
+    return data
+  }
+
   function handleAddRecipient() {
     if (!platform) return
-    setRecepient((prev) => [
+    setRecipient((prev) => [
         ...prev,
         {platform, contact},
     ])
-    console.log(recepient);
+    console.log(recipients);
     setContact("")
   }
 
@@ -63,29 +103,39 @@ function CreateTask() {
     if (!selectedDate) newErrors.selectedDateError = "Date is required";
     if (!time) newErrors.selectedTime = "Time is required";
     if (!platform) newErrors.selectedPlatform = "Platform is required"
-    if (!recepient) newErrors.selectedRecepient = "Recepients(s) email or platform contact is required";
+    if (!recipients) newErrors.selectedRecipient = "Recipients(s) email or platform contact is required";
     if (!message?.trim()) newErrors.typedMessage = "Message is required";
     if (!messageTitle) newErrors.typedMessageTitle = "Message Title is required";
     
     setCustomErrors(newErrors)
-    console.log(formData)
     if (Object.keys(newErrors).length > 0) return
+
+    const formData: TaskFormData = {
+        selectedDate,
+        time,
+        recipients,
+        message,
+        messageTitle
+    }
+
+    storeMessage(formData, "scheduledMessage")
+
+    console.log(formData)
   }
 
-  const [formData, setFormData] = useState({
-  date: null as Date | null,
-  time: "",
-  platform: "",
-  recepient: "",
-  message: "",
-  messageTitle: ""
-})
+//   const [formData, setFormData] = useState({
+//     date: null as Date | null,
+//     time: "",
+//     recipient: "",
+//     message: "",
+//     messageTitle: ""
+//     })
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
   const [time, setTime] = useState("");
   const [platform, setPlatform] = useState<Platform>("")
-  const [recepient, setRecepient] = useState<Recipient[]>([]);
+  const [recipients, setRecipient] = useState<Recipient[]>([]);
   const [message, setMessage] = useState("")
   const [messageTitle, setMessageTitle] = useState("")
   const [contact, setContact] = useState("");
@@ -179,7 +229,7 @@ function CreateTask() {
             }
         </div>
         <div className="flex flex-col items-start w-full">
-          <label className="font-medium">Recepient(s)</label>
+          <label className="font-medium">Recipient(s)</label>
           <div className="flex w-full gap-6 border-gray-300 border rounded-md p-2">
             <input
               disabled={!platform}
@@ -198,7 +248,7 @@ function CreateTask() {
             </button>
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
-                {recepient.map((item, index) => (
+                {recipients.map((item, index) => (
                     <span
                     key={index}
                     className={`text-white font-medium text-sm px-3 py-1 rounded-full ${platformColors[item.platform]}`}
@@ -208,9 +258,9 @@ function CreateTask() {
                 ))
                 }
           </div>
-          {customErrors.selectedRecepient && (
+          {customErrors.selectedRecipient && (
                 <p className="text-red-500 text-sm mt-1">
-                    {customErrors.selectedRecepient}
+                    {customErrors.selectedRecipient}
                 </p>
             )
             }
