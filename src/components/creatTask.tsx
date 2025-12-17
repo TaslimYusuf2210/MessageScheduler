@@ -94,6 +94,16 @@ function CreateTask() {
     setContact("")
   }
 
+  function resetForm() {
+    setSelectedDate(undefined); // or new Date() if you want default today
+    setTime("");
+    setPlatform("");
+    setRecipient([]);
+    setMessage("");
+    setMessageTitle("");
+    setContact("");
+    }
+
 
   const [customErrors, setCustomErrors] = useState<customErrors>({});
 
@@ -119,8 +129,8 @@ function CreateTask() {
     }
 
     storeMessage(formData, "scheduledMessage")
-
     console.log(formData)
+    resetForm()
   }
 
 //   const [formData, setFormData] = useState({
@@ -139,6 +149,11 @@ function CreateTask() {
   const [message, setMessage] = useState("")
   const [messageTitle, setMessageTitle] = useState("")
   const [contact, setContact] = useState("");
+  const [frequency, setFrequency] = useState<string | null>("");
+  const [repeat, setRepeat] = useState(false);
+  const [finalDate, setFinalDate] = useState<Date | undefined>(new Date())
+  const [access, setAccess] = useState(false)
+  
 
   const isEmailPlatform = platform === "gmail"
 
@@ -268,7 +283,17 @@ function CreateTask() {
         <hr />
         <p>(Optional)</p>
         <div className="space-y-2 flex gap-5">
-          <FrequencySelection></FrequencySelection>
+          <FrequencySelection
+          repeat={repeat}
+          frequency={frequency}
+          finalDate={finalDate}
+          access={access}
+          onRepeatToggle={setRepeat}
+          onSelectFinalDate={setFinalDate}
+          onSelectFrequency={setFrequency}
+          onHandleAccess={setAccess}
+          >
+          </FrequencySelection>
         </div>
         <div className="border border-white pt-4 border-t-gray-200 flex justify-between">
           <button type="button" className="border border-red-600 py-1 px-4 rounded-2xl bg-white text-red-500 hover:text-white hover:bg-red-600 cursor-pointer">

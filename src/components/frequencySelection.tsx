@@ -4,34 +4,40 @@ import { Switch } from "./ui/switch";
 import DatePicker from "./datePicker";
 import { useEffect } from "react";
 
+interface FrequencySelectionProps {
+  onRepeatToggle: (value: boolean) => void;
+  onSelectFrequency: (value: string | null) => void;
+  onSelectFinalDate: (value: Date | undefined) => void;
+  onHandleAccess: (value: boolean) => void;
+  frequency: string | null
+  repeat: boolean
+  finalDate: Date | undefined
+  access: boolean
+}
 
-
-function FrequencySelection() {
-  const [repeat, setRepeat] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null)
-  const [finalDate, setFinalDate] = useState<Date | undefined>(new Date())
-  const [access, setAccess] = useState(false)
+function FrequencySelection({frequency, repeat, finalDate, access, onHandleAccess, onRepeatToggle, onSelectFinalDate, onSelectFrequency}: FrequencySelectionProps) {
 
   useEffect(() => {
     if (!repeat) {
-      setAccess(false)
-      setFinalDate(undefined)
+      onHandleAccess(false)
+      onSelectFinalDate(undefined)
     } 
   }, [repeat])
 
 
   function handleSelect(option: string) {
-    setSelectedOption(option)
-    setAccess(true)
+    onSelectFrequency(option)
+    onHandleAccess(true)
   }
   function handleRepeat() {
-    setSelectedOption(null)
-    setFinalDate(undefined)
-    setRepeat((prev) => !prev)
+    const toggleRepeat = !repeat
+    onSelectFrequency(null)
+    onSelectFinalDate(undefined)
+    onRepeatToggle(toggleRepeat)
     if (!repeat) {
-      setAccess(false)
+      onHandleAccess(false)
     }
-    console.log(selectedOption, finalDate);
+    console.log(frequency, finalDate);
     
   }
 
@@ -52,7 +58,7 @@ function FrequencySelection() {
           <div className={`space-x-2 ${repeat ? "" : "text-gray-300"}`}>
             <Checkbox
               disabled={!repeat}
-              checked={selectedOption === "Daily"}
+              checked={frequency === "Daily"}
               onCheckedChange={() => handleSelect("Daily")}
               className="data-[state=checked]:bg-green-500 data-[state=checked]:border-none"
             ></Checkbox>
@@ -61,7 +67,7 @@ function FrequencySelection() {
           <div className={`space-x-2 ${repeat ? "" : "text-gray-300"}`}>
             <Checkbox
               disabled={!repeat}
-              checked={selectedOption === "Weekly"}
+              checked={frequency === "Weekly"}
               onCheckedChange={() => handleSelect("Weekly")}
               className="data-[state=checked]:bg-green-500 data-[state=checked]:border-none"
             ></Checkbox>
@@ -70,7 +76,7 @@ function FrequencySelection() {
           <div className={`space-x-2 ${repeat ? "" : "text-gray-300"}`}>
             <Checkbox
               disabled={!repeat}
-              checked={selectedOption === "Monthly"}
+              checked={frequency === "Monthly"}
               onCheckedChange={() => handleSelect("Monthly")}
               className="data-[state=checked]:bg-green-500 data-[state=checked]:border-none"
             ></Checkbox>
@@ -83,7 +89,7 @@ function FrequencySelection() {
           >
             <Checkbox
               disabled={!repeat}
-              checked={selectedOption === "Minutes"}
+              checked={frequency === "Minutes"}
               onCheckedChange={() => handleSelect("Minutes")}
               className="data-[state=checked]:bg-green-500 data-[state=checked]:border-none"
             ></Checkbox>
@@ -101,7 +107,7 @@ function FrequencySelection() {
                             <DatePicker
                             dateValue={finalDate}
                             disabled={!access}
-                            onDateChange={setFinalDate}
+                            onDateChange={onSelectFinalDate}
                             className=""
                             ></DatePicker>
                         </div>
