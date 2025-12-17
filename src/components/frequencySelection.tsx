@@ -3,19 +3,24 @@ import { useState } from "react";
 import { Switch } from "./ui/switch";
 import DatePicker from "./datePicker";
 import { useEffect } from "react";
+import type { Frequency } from "@/types/frequency";
 
 interface FrequencySelectionProps {
   onRepeatToggle: (value: boolean) => void;
-  onSelectFrequency: (value: string | null) => void;
+  onSelectFrequency: (value: Frequency | undefined) => void;
   onSelectFinalDate: (value: Date | undefined) => void;
   onHandleAccess: (value: boolean) => void;
-  frequency: string | null
+  frequency: Frequency | undefined
   repeat: boolean
   finalDate: Date | undefined
   access: boolean
+  errors?: {
+    frequency?: string;
+    finalDate?: string;
+  };
 }
 
-function FrequencySelection({frequency, repeat, finalDate, access, onHandleAccess, onRepeatToggle, onSelectFinalDate, onSelectFrequency}: FrequencySelectionProps) {
+function FrequencySelection({frequency, repeat, finalDate, access, onHandleAccess, onRepeatToggle, onSelectFinalDate, onSelectFrequency, errors}: FrequencySelectionProps) {
 
   useEffect(() => {
     if (!repeat) {
@@ -25,21 +30,33 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
   }, [repeat])
 
 
-  function handleSelect(option: string) {
-    onSelectFrequency(option)
+  function handleSelect(option: "daily" | "weekly" | "monthly" | "minutes") {
+    if (option === "minutes") return
+    const frequency:Frequency = {type: option}
+    onSelectFrequency(frequency)
     onHandleAccess(true)
   }
   function handleRepeat() {
     const toggleRepeat = !repeat
-    onSelectFrequency(null)
+    onSelectFrequency(undefined)
     onSelectFinalDate(undefined)
     onRepeatToggle(toggleRepeat)
     if (!repeat) {
       onHandleAccess(false)
     }
     console.log(frequency, finalDate);
-    
   }
+
+  function handleMinutesSelect(interval: number) {
+    onSelectFrequency({
+    type: "minutes",
+    interval,
+    })
+    onHandleAccess(true)
+  }
+
+  const [interval, setInterval] = useState<number | "">("");
+
 
   return (
     <div className="flex gap-5">
@@ -58,8 +75,8 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
           <div className={`space-x-2 ${repeat ? "" : "text-gray-300"}`}>
             <Checkbox
               disabled={!repeat}
-              checked={frequency === "Daily"}
-              onCheckedChange={() => handleSelect("Daily")}
+              checked={frequency?.type === "daily"}
+              onCheckedChange={() => handleSelect("daily")}
               className="data-[state=checked]:bg-green-500 data-[state=checked]:border-none"
             ></Checkbox>
             Daily
@@ -67,8 +84,8 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
           <div className={`space-x-2 ${repeat ? "" : "text-gray-300"}`}>
             <Checkbox
               disabled={!repeat}
-              checked={frequency === "Weekly"}
-              onCheckedChange={() => handleSelect("Weekly")}
+              checked={frequency?.type === "weekly"}
+              onCheckedChange={() => handleSelect("weekly")}
               className="data-[state=checked]:bg-green-500 data-[state=checked]:border-none"
             ></Checkbox>
             Weekly
@@ -76,8 +93,8 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
           <div className={`space-x-2 ${repeat ? "" : "text-gray-300"}`}>
             <Checkbox
               disabled={!repeat}
-              checked={frequency === "Monthly"}
-              onCheckedChange={() => handleSelect("Monthly")}
+              checked={frequency?.type === "monthly"}
+              onCheckedChange={() => handleSelect("monthly")}
               className="data-[state=checked]:bg-green-500 data-[state=checked]:border-none"
             ></Checkbox>
             Monthly
@@ -89,21 +106,39 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
           >
             <Checkbox
               disabled={!repeat}
-              checked={frequency === "Minutes"}
-              onCheckedChange={() => handleSelect("Minutes")}
+              checked={frequency?.type === "minutes"}
+              onCheckedChange={() => handleSelect("minutes")}
               className="data-[state=checked]:bg-green-500 data-[state=checked]:border-none"
             ></Checkbox>
             <span className="flex items-center gap-2">
               Every
-              <input type="number" className="p-1 border rounded-md w-20" />
+              <input 
+              min={1}
+              value={interval}
+              onChange={(e) => {
+                const value = Number(e.target.value)
+                setInterval(value)
+                if (value > 0) {
+                  handleMinutesSelect(value)
+                }
+              }}
+              disabled={frequency?.type !== "minutes"} 
+              type="number" 
+              className="p-1 border rounded-md w-20" 
+              />
               minutes
             </span>
+          </div>
+          <div>
+            {errors?.frequency && (
+              <p className="text-sm text-red-500 mt-1">{errors.frequency}</p>
+            )}
           </div>
         </div>
       </div>
       <div className="border border-l-2 border-l-gray-200 border-white p-2">
                         <label className="font-medium">Select Final Day <span className="font-light text-gray-300">(Optional)</span></label>
-                        <div className={`border rounded-md p-2 ${access ? "" : "cursor-not-allowed "}`}>
+                        <div className={`border rounded-md p-2 ${access ? "border-gray-400" : "cursor-not-allowed "}`}>
                             <DatePicker
                             dateValue={finalDate}
                             disabled={!access}
@@ -111,6 +146,9 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
                             className=""
                             ></DatePicker>
                         </div>
+                        {errors?.finalDate && (
+      <p className="text-sm text-red-500 mt-1">{errors.finalDate}</p>
+    )}
                     </div>
     </div>
   );

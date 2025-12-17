@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { Platform } from "./selectPlatform";
+import type { Frequency } from "@/types/frequency";
 
 const schema = yup.object().shape({
   message: yup.string().required("Message is required"),
@@ -30,6 +31,8 @@ function CreateTask() {
     selectedRecipient?: string;
     typedMessage?: string;
     typedMessageTitle?: string;
+    frequency?: string;
+    finalDate?: string;
   };
 
   interface TaskFormData {
@@ -39,7 +42,7 @@ function CreateTask() {
   messageTitle: string;
   message: string;
   repeat?: boolean;
-  frequency?: "daily" | "weekly" | "monthly";
+  frequency?: Frequency;
   endDate?: Date | undefined;
 }
 
@@ -116,6 +119,16 @@ function CreateTask() {
     if (!recipients) newErrors.selectedRecipient = "Recipients(s) email or platform contact is required";
     if (!message?.trim()) newErrors.typedMessage = "Message is required";
     if (!messageTitle) newErrors.typedMessageTitle = "Message Title is required";
+    /* 🔴 FREQUENCY LOGIC */
+    if (repeat) {
+      if (!frequency) {
+        newErrors.frequency = "Frequency is required";
+      }
+
+      if (!finalDate) {
+        newErrors.finalDate = "Select an end date";
+      }
+    }
     
     setCustomErrors(newErrors)
     if (Object.keys(newErrors).length > 0) return
@@ -125,7 +138,13 @@ function CreateTask() {
         time,
         recipients,
         message,
-        messageTitle
+        messageTitle,
+
+        ...(repeat && {
+    repeat,
+    frequency,
+    endDate: finalDate,
+  }),
     }
 
     storeMessage(formData, "scheduledMessage")
@@ -149,7 +168,7 @@ function CreateTask() {
   const [message, setMessage] = useState("")
   const [messageTitle, setMessageTitle] = useState("")
   const [contact, setContact] = useState("");
-  const [frequency, setFrequency] = useState<string | null>("");
+  const [frequency, setFrequency] = useState<Frequency | undefined>(undefined);
   const [repeat, setRepeat] = useState(false);
   const [finalDate, setFinalDate] = useState<Date | undefined>(new Date())
   const [access, setAccess] = useState(false)
@@ -292,6 +311,10 @@ function CreateTask() {
           onSelectFinalDate={setFinalDate}
           onSelectFrequency={setFrequency}
           onHandleAccess={setAccess}
+          errors={{
+            frequency: customErrors.frequency,
+            finalDate: customErrors.finalDate,
+          }}
           >
           </FrequencySelection>
         </div>
