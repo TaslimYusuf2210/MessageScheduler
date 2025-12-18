@@ -32,7 +32,7 @@ function TimePicker({ selectedDate, onTimeChange }: TimePickerProps) {
         return `${hours}:${minutes}`
     }
     return ( 
-        <div>
+        <div className="w-full">
             <input
                 type="time"
                 value={time}

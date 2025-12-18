@@ -6,9 +6,10 @@ interface ModalProps {
     children: React.ReactNode
     width?: string
     height?: string
+    maxWidth?: string
 }
 
-function Modal({isOpen, onClose, children, width = "w-[80%]", height = "h-auto"}: ModalProps) {
+function Modal({isOpen, onClose, children, width = "w-[80%]", height = "h-auto", maxWidth = "auto"}: ModalProps) {
 
 
     if (!isOpen) {
@@ -18,7 +19,7 @@ function Modal({isOpen, onClose, children, width = "w-[80%]", height = "h-auto"}
         <div 
         className="fixed inset-0 flex items-center justify-center backdrop-blur-lg z-50"
         >
-            <div className={`bg-white rounded-lg shadow-lg relative ${width} ${height} max-h-[90vh] overflow-auto`}>
+            <div className={`bg-white rounded-lg shadow-lg relative ${width} ${height} ${maxWidth} max-h-[90vh] overflow-auto`}>
                 <IoMdClose  
                 onClick={onClose}
                 className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl"/>

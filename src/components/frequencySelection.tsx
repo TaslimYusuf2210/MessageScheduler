@@ -30,9 +30,15 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
   }, [repeat])
 
 
-  function handleSelect(option: "daily" | "weekly" | "monthly" | "minutes") {
-    if (option === "minutes") return
-    const frequency:Frequency = {type: option}
+  function handleSelect(option: "daily" | "weekly" | "monthly") {
+    // if (option === "minutes") {
+
+    //   return
+    // }
+    let frequency:Frequency = {type: option}
+    // if (option === "minutes") {
+    //   frequency = {type: option, interval: interval}
+    // }
     onSelectFrequency(frequency)
     onHandleAccess(true)
   }
@@ -59,7 +65,7 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
 
 
   return (
-    <div className="flex gap-5">
+    <div className="flex flex-col sm:flex-row  w-full justify-between gap-5">
       <div>
         <div className="flex items-center gap-3">
           <label className="font-medium">Repeat</label>
@@ -71,7 +77,7 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
                             "
           ></Switch>
         </div>
-        <div className="text-left space-y-2">
+        <div className="text-left space-y-2 sm:block grid grid-cols-2 gap-2">
           <div className={`space-x-2 ${repeat ? "" : "text-gray-300"}`}>
             <Checkbox
               disabled={!repeat}
@@ -107,7 +113,7 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
             <Checkbox
               disabled={!repeat}
               checked={frequency?.type === "minutes"}
-              onCheckedChange={() => handleSelect("minutes")}
+              // onCheckedChange={() => handleSelect()}
               className="data-[state=checked]:bg-green-500 data-[state=checked]:border-none"
             ></Checkbox>
             <span className="flex items-center gap-2">
@@ -136,7 +142,8 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
           </div>
         </div>
       </div>
-      <div className="border border-l-2 border-l-gray-200 border-white p-2">
+      <div className="border border-l-gray-200"></div>
+      <div>
                         <label className="font-medium">Select Final Day <span className="font-light text-gray-300">(Optional)</span></label>
                         <div className={`border rounded-md p-2 ${access ? "border-gray-400" : "cursor-not-allowed "}`}>
                             <DatePicker

@@ -178,7 +178,7 @@ function CreateTask() {
 
   return (
     <div className="py-6 px-4">
-      <header className="text-left text-xl mb-1 font-semibold">
+      <header className="text-left text-xl mb-1 font-bold">
         Schedule a Message
       </header>
       <hr className="border-gray-200" />
@@ -187,7 +187,7 @@ function CreateTask() {
         className="space-y-3 px-2 py-4"
         onSubmit={onCreate}
       >
-        <div className="w-full flex gap-2">
+        <div className="w-full flex flex-col sm:flex-row gap-2">
           <div className="w-full flex flex-col items-start">
             <label className="font-medium">Scheduled Date</label>
             <div className="p-2 border border-gray-200 rounded-md w-full">
@@ -205,7 +205,7 @@ function CreateTask() {
             )
             }
           </div>
-          <div className="w-[40%] flex flex-col items-start">
+          <div className="sm:w-[40%] flex flex-col items-start">
             <label className="font-medium">Scheduled Time</label>
             <div className=" border border-gray-200 rounded-md w-full p-2">
               <TimePicker

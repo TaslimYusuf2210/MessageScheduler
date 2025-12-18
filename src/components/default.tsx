@@ -63,7 +63,8 @@ function DefaultPage() {
             <Modal
             isOpen={isModalOpen}
             onClose={closeModal}
-            width="w-[40%]"
+            width="w-[90%]"
+            maxWidth="w-[600px]"
             >
                 <CreateTask></CreateTask>
             </Modal>
