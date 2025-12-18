@@ -3,3 +3,21 @@ export type Frequency =
   | { type: "weekly" }
   | { type: "monthly" }
   | { type: "minutes"; interval: number | string };
+
+  export type Recipient = {
+    platform: Platform;
+    contact: string;
+      };
+
+export type Platform = "" | "gmail" | "whatsapp" | "telegram" | "slack";
+
+export interface TaskFormData {
+  selectedDate: string | undefined;
+  time: string;
+  recipients: Recipient[];
+  messageTitle: string;
+  message: string;
+  repeat?: boolean;
+  frequency?: Frequency;
+  endDate?: string | undefined;
+}

@@ -7,9 +7,10 @@ interface ModalProps {
     width?: string
     height?: string
     maxWidth?: string
+    bgColor?: string
 }
 
-function Modal({isOpen, onClose, children, width = "w-[80%]", height = "h-auto", maxWidth = "auto"}: ModalProps) {
+function Modal({isOpen, onClose, children, width = "w-[80%]", height = "h-auto", maxWidth = "auto", bgColor}: ModalProps) {
 
 
     if (!isOpen) {
@@ -19,7 +20,7 @@ function Modal({isOpen, onClose, children, width = "w-[80%]", height = "h-auto",
         <div 
         className="fixed inset-0 flex items-center justify-center backdrop-blur-lg z-50"
         >
-            <div className={`bg-white rounded-lg shadow-lg relative ${width} ${height} ${maxWidth} max-h-[90vh] overflow-auto`}>
+            <div className={`${bgColor} rounded-lg shadow-lg relative ${width} ${height} ${maxWidth} max-h-[90vh] overflow-auto`}>
                 <IoMdClose  
                 onClick={onClose}
                 className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl"/>

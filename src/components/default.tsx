@@ -2,20 +2,32 @@ import { Button } from "./ui/button";
 import Modal from "./Modal";
 import { useState } from "react";
 import CreateTask from "./creatTask";
+import ViewTask from "./viewTask";
 import illustraion from "../assets/illustration.svg"
 
 function DefaultPage() {
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [modalContent, setModalContent] = useState("")
 
     function closeModal() {
         setIsModalOpen((prev) => !prev)
+    }
+
+    function handleOpenModal(modal: string) {
+        console.log("working");
+        
+        setIsModalOpen(true)
+        setModalContent(modal)
     }
 
     return ( 
         <div className="text-center px-4 py-6 space-y-8">
             <header className="text-3xl font-bold">Message Scheduler</header>
             <div className="flex justify-between items-end">
-                <p className="text-green-400 transition-all duration-300 hover:font-medium hover:cursor-pointer hover:text-green-600 text-lg">View Tasks List</p>
+                <p 
+                className="text-green-400 transition-all duration-300 hover:font-medium hover:cursor-pointer hover:text-green-600 text-lg"
+                onClick={() => handleOpenModal("viewTask")}
+                >View Tasks List</p>
                 <Button 
                 onClick={() => setIsModalOpen(true)}
                 className="bg-green-400 flex rounded-4xl py-1 px-2 hover:bg-green-600 font-semibold text-white text-lg hover:cursor-pointer">
@@ -47,7 +59,7 @@ function DefaultPage() {
                     click "Add Task" to get started.
                 </p>
                 <Button 
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => handleOpenModal("createTask")}
                 className="bg-green-400 rounded-4xl py-1 px-2 hover:bg-green-600 font-semibold text-white text-lg hover:cursor-pointer"
                 >
                 <svg 
@@ -65,11 +77,33 @@ function DefaultPage() {
             onClose={closeModal}
             width="w-[90%]"
             maxWidth="w-[600px]"
+            bgColor="bg-gray-50"
             >
-                <CreateTask></CreateTask>
+                {modalContent === "createTask" && <CreateTask />}
+                {modalContent === "viewTask" && <ViewTask />}
             </Modal>
         </div>
      );
 }
 
 export default DefaultPage;
+
+// function handleSelect(option: "daily" | "weekly" | "monthly" | "minutes") {
+//     // if (option === "minutes") {
+
+//     //   return
+//     // }
+//     const frequency:Frequency = {type: option}
+//     if (option === "minutes") {
+//       onSelectFrequency(frequency;{interval: undefined})
+//     }
+//     onSelectFrequency(frequency)
+//     onHandleAccess(true)
+//   }
+
+// Whenever i try to check by minute checkbox, it doesn't check like the rest of the frequency option. So i figured the problem was because i wasn't specify something for the onSelectFrequency callback send to the parent. However when i try making it send something back, typescript throws a error because whenever type === "minutes", a new property called interval is a also needed. Meanwhile at that point, interval hasn't been decided decided.
+
+// checked={frequency?.type === "minutes"}
+//               onCheckedChange={() => handleSelect("minutes")}
+
+// This is how i'm asking it to be checked in the checkbox component

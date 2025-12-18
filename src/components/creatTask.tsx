@@ -8,6 +8,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import type { Platform } from "./selectPlatform";
 import type { Frequency } from "@/types/frequency";
+import { storeMessage } from "@/utils/storage";
+import type { TaskFormData } from "@/types/frequency";
 
 const schema = yup.object().shape({
   message: yup.string().required("Message is required"),
@@ -35,16 +37,16 @@ function CreateTask() {
     finalDate?: string;
   };
 
-  interface TaskFormData {
-  selectedDate: Date | undefined;
-  time: string;
-  recipients: Recipient[];
-  messageTitle: string;
-  message: string;
-  repeat?: boolean;
-  frequency?: Frequency;
-  endDate?: Date | undefined;
-}
+//   interface TaskFormData {
+//   selectedDate: string | undefined;
+//   time: string;
+//   recipients: Recipient[];
+//   messageTitle: string;
+//   message: string;
+//   repeat?: boolean;
+//   frequency?: Frequency;
+//   endDate?: string | undefined;
+// }
 
   type Recipient = {
   platform: Platform;
@@ -58,34 +60,34 @@ function CreateTask() {
   slack: "bg-red-500",
     };
 
-  function normalizeData(data:TaskFormData) {
-    return {
-    ...data,
-    selectedDate: data.selectedDate
-      ? data.selectedDate.toISOString()
-      : null,
-    }
-  }
+  // function normalizeData(data:TaskFormData) {
+  //   return {
+  //   ...data,
+  //   selectedDate: data.selectedDate
+  //     ? data.selectedDate.toISOString()
+  //     : null,
+  //   }
+  // }
 
-  function storeMessage(data:TaskFormData, key:string) {
-    const existingData = getDatabase(key)
-    const updatedData = [
-        ...existingData,
-        normalizeData(data),
-    ]
+  // function storeMessage(data:TaskFormData, key:string) {
+  //   const existingData = getDatabase(key)
+  //   const updatedData = [
+  //       ...existingData,
+  //     data,
+  //   ]
 
-    localStorage.setItem(key, JSON.stringify(updatedData))
-  }
+  //   localStorage.setItem(key, JSON.stringify(updatedData))
+  // }
 
-  function getDatabase(key:string) {
-    const rawData = localStorage.getItem(key)
-    if (!rawData) {
-        console.log([])
-        return []
-    }
-    const data = JSON.parse(rawData)
-    return data
-  }
+  // function getDatabase(key:string) {
+  //   const rawData = localStorage.getItem(key)
+  //   if (!rawData) {
+  //       console.log([])
+  //       return []
+  //   }
+  //   const data = JSON.parse(rawData)
+  //   return data
+  // }
 
   function handleAddRecipient() {
     if (!platform) return
@@ -134,7 +136,7 @@ function CreateTask() {
     if (Object.keys(newErrors).length > 0) return
 
     const formData: TaskFormData = {
-        selectedDate,
+        selectedDate: selectedDate?.toISOString(),
         time,
         recipients,
         message,
@@ -143,7 +145,7 @@ function CreateTask() {
         ...(repeat && {
     repeat,
     frequency,
-    endDate: finalDate,
+    endDate: finalDate?.toISOString(),
   }),
     }
 
