@@ -8,7 +8,7 @@ import type { TaskFormData } from "@/types/frequency";
 
 function DefaultPage() {
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [modalContent, setModalContent] = useState("")
+    const [modalContent, setModalContent] = useState<string | null>("")
     const [taskToEdit, setTaskToEdit] = useState<TaskFormData | undefined>();
 
     function handleEdit(task: TaskFormData) {
@@ -19,6 +19,8 @@ function DefaultPage() {
 
     function closeModal() {
         setIsModalOpen((prev) => !prev)
+        setTaskToEdit(undefined)
+        setModalContent(null)
     }
 
     function handleOpenModal(modal: string) {
@@ -89,6 +91,7 @@ function DefaultPage() {
             >
                 {modalContent === "createTask" && 
                 <CreateTask 
+                isOpen={isModalOpen}
                 taskToEdit={taskToEdit}
                 // onSubmit={onsubmit}
                 />}

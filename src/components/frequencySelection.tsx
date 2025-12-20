@@ -29,16 +29,18 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
     } 
   }, [repeat])
 
+  useEffect(() => {
+  if (frequency?.type === "minutes") {
+    setMinuteInterval(String(frequency.interval))
+  } else {
+    setMinuteInterval("")
+  }
+}, [frequency])
+
 
   function handleSelect(option: "daily" | "weekly" | "monthly") {
-    // if (option === "minutes") {
-
-    //   return
-    // }
+    
     let frequency = {type: option}
-    // if (option === "minutes") {
-    //   frequency = {type: option, interval: interval}
-    // }
     onSelectFrequency(frequency)
     onHandleAccess(true)
   }
@@ -53,15 +55,15 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
     console.log(frequency, finalDate);
   }
 
-  function handleMinutesSelect(intervalM: number) {
+  function handleMinutesSelect(intervalparams: number | string) {
     onSelectFrequency({
     type: "minutes",
-    interval: intervalM
+    interval: intervalparams
     })
     onHandleAccess(true)
   }
 
-  const [intervalS, setIntervalS] = useState<number | "">("");
+  const [minuteInterval, setMinuteInterval] = useState<number | string>("");
 
 
   return (
@@ -113,17 +115,17 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
             <Checkbox
               disabled={!repeat}
               checked={frequency?.type === "minutes"}
-              // onCheckedChange={() => handleSelect()}
+              onCheckedChange={() => handleMinutesSelect(minuteInterval)}
               className="data-[state=checked]:bg-green-500 data-[state=checked]:border-none"
             ></Checkbox>
             <span className="flex items-center gap-2">
               Every
               <input 
               min={1}
-              value={intervalS}
+              value={minuteInterval}
               onChange={(e) => {
                 const value = Number(e.target.value)
-                setIntervalS(value)
+                setMinuteInterval(value)
                 if (value > 0) {
                   handleMinutesSelect(value)
                 }

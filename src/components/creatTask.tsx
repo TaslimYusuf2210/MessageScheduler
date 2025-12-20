@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect ,useState, type FormEvent } from "react";
 import DatePicker from "./datePicker";
 import TimePicker from "./timePicker";
 import SelectPlatform from "./selectPlatform";
@@ -18,10 +18,11 @@ const schema = yup.object().shape({
 
 interface CreateTaskProps {
   taskToEdit?: TaskFormData;
+  isOpen: boolean;
   // onSubmit: (task: TaskFormData) => void;
 }
 
-function CreateTask({ taskToEdit }: CreateTaskProps) {
+function CreateTask({ taskToEdit, isOpen }: CreateTaskProps) {
   const {
     register,
     handleSubmit,
@@ -54,6 +55,27 @@ function CreateTask({ taskToEdit }: CreateTaskProps) {
   slack: "bg-red-500",
     };
 
+  useEffect(() => {
+  if (!taskToEdit) return
+  if (taskToEdit.frequency?.type === "minutes") {
+    setMinuteInterval(taskToEdit.frequency?.interval)
+  }
+
+  if (taskToEdit.repeat) {
+    setRepeat(true)
+    setAccess(true)
+  }
+
+  setTime(taskToEdit.time ?? "")
+}, [taskToEdit])
+
+useEffect(() => {
+  if (!isOpen) {
+    resetForm()
+  }
+}, [isOpen])
+
+
   function handleAddRecipient() {
     if (!platform || !contact.trim()) return
     setRecipient((prev) => [
@@ -64,6 +86,10 @@ function CreateTask({ taskToEdit }: CreateTaskProps) {
     setContact("")
   }
 
+  function deleteRecepient(index:number) {
+     setRecipient((prev) => prev.filter((_, i) => i !== index));
+  }
+
   function resetForm() {
     setSelectedDate(undefined); // or new Date() if you want default today
     setTime("");
@@ -72,6 +98,9 @@ function CreateTask({ taskToEdit }: CreateTaskProps) {
     setMessage("");
     setMessageTitle("");
     setContact("");
+    setFrequency(undefined)
+    setRepeat(false)
+    setFinalDate(undefined)
     }
 
 
@@ -82,8 +111,8 @@ function CreateTask({ taskToEdit }: CreateTaskProps) {
     const newErrors: customErrors = {};
     if (!selectedDate) newErrors.selectedDateError = "Date is required";
     if (!time) newErrors.selectedTime = "Time is required";
-    if (!platform) newErrors.selectedPlatform = "Platform is required"
-    if (!recipients) newErrors.selectedRecipient = "Recipients(s) email or platform contact is required";
+    // if (!platform) newErrors.selectedPlatform = "Platform is required"
+    if (recipients.length < 1) newErrors.selectedRecipient = "Recipients(s) email or platform contact is required";
     if (!message?.trim()) newErrors.typedMessage = "Message is required";
     if (!messageTitle) newErrors.typedMessageTitle = "Message Title is required";
     /* 🔴 FREQUENCY LOGIC */
@@ -133,6 +162,7 @@ function CreateTask({ taskToEdit }: CreateTaskProps) {
   const [repeat, setRepeat] = useState(taskToEdit?.repeat ?? false);
   const [finalDate, setFinalDate] = useState<Date | undefined>(new Date(taskToEdit?.endDate ? new Date(taskToEdit.endDate) : new Date()))
   const [access, setAccess] = useState(false)
+  const [minuteInterval, setMinuteInterval] = useState<string | number>("")
   
   const isEmailPlatform = platform === "gmail"
   const isEditing = Boolean(taskToEdit);
@@ -170,6 +200,7 @@ function CreateTask({ taskToEdit }: CreateTaskProps) {
             <label className="font-medium">Scheduled Time</label>
             <div className=" border border-gray-200 rounded-md w-full p-2">
               <TimePicker
+                time={time}
                 onTimeChange={setTime}
                 selectedDate={selectedDate}
               ></TimePicker>
@@ -235,7 +266,16 @@ function CreateTask({ taskToEdit }: CreateTaskProps) {
                     : "Enter phone number"
                 }
               value={contact}
-              onChange={(e) => setContact(e.target.value)}
+              onChange={(e) => {
+                 const value = e.target.value;
+
+                if (!isEmailPlatform) {
+                  // Allow only numbers and max 11 digits
+                  if (!/^\d*$/.test(value)) return;
+                  if (value.length > 11) return;
+                }
+                setContact(value)
+              }}
               className="p-2 w-full rounded-md border border-gray-200"
             />
             <button type="button" onClick={handleAddRecipient} className="bg-green-400 rounded-md text-white py-2 px-4 font-medium">
@@ -244,12 +284,27 @@ function CreateTask({ taskToEdit }: CreateTaskProps) {
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
                 {recipients.map((item, index) => (
+                  <div className="">
                     <span
                     key={index}
-                    className={`text-white font-medium text-sm px-3 py-1 rounded-full ${platformColors[item.platform]}`}
+                    className={`text-white font-medium flex gap-2 items-center text-sm px-3 py-1 rounded-full ${platformColors[item.platform]}`}
                     >
                         {item.contact}
+                        <span onClick={() => deleteRecepient(index)}>
+                      <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="24" 
+                      height="24" 
+                      viewBox="0 0 36 36">
+                        <path 
+                        fill="currentColor" 
+                        d="m19.41 18l8.29-8.29a1 1 0 0 0-1.41-1.41L18 16.59l-8.29-8.3a1 1 0 0 0-1.42 1.42l8.3 8.29l-8.3 8.29A1 1 0 1 0 9.7 27.7l8.3-8.29l8.29 8.29a1 1 0 0 0 1.41-1.41Z"/>
+                        <path fill="none" d="M0 0h36v36H0z"/>
+                      </svg>
                     </span>
+                    </span>
+                    
+                  </div>
                 ))
                 }
           </div>

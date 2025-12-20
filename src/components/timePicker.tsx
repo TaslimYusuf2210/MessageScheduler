@@ -3,10 +3,11 @@ import { useState } from "react";
 interface TimePickerProps  {
     selectedDate: Date | undefined
     onTimeChange: (time: string) => void
+    time: string
 }
 
-function TimePicker({ selectedDate, onTimeChange }: TimePickerProps) {
-    const [time, setTime] = useState("")
+function TimePicker({ selectedDate, onTimeChange, time }: TimePickerProps) {
+    const [timeState, setTimeState] = useState("")
     
     // helper: check if selected date is today
     const isToday = () => {
@@ -20,7 +21,8 @@ function TimePicker({ selectedDate, onTimeChange }: TimePickerProps) {
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const value = e.target.value
-        setTime(value)
+        
+        setTimeState(value)
         onTimeChange(value)
     }
 
