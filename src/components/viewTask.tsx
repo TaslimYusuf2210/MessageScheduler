@@ -9,13 +9,7 @@ interface ViewTaskProps {
 }
 
 function ViewTask({onHandleEdit}: ViewTaskProps) {
-    const [taskToEdit, setTaskToEdit] = useState<TaskFormData | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    function handleEdit(task: TaskFormData) {
-        setTaskToEdit(task);
-        setIsModalOpen(true);
-    }
     function handleDelete(id:string) {
         console.log("Delete:", id)
             deleteMessage("scheduledMessage", id)

@@ -1,6 +1,5 @@
 import type { Recipient } from "@/types/frequency"
 import type { Frequency } from "@/types/frequency"
-import { deleteMessage } from "@/utils/storage"
 
 interface viewTaskCardProps {
     id: string

@@ -3,18 +3,10 @@ import DatePicker from "./datePicker";
 import TimePicker from "./timePicker";
 import SelectPlatform from "./selectPlatform";
 import FrequencySelection from "./frequencySelection";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import type { Platform } from "./selectPlatform";
 import type { Frequency } from "@/types/frequency";
 import { storeMessage } from "@/utils/storage";
 import type { TaskFormData } from "@/types/frequency";
-
-const schema = yup.object().shape({
-  message: yup.string().required("Message is required"),
-  messageTitle: yup.string().required("Password is required"),
-});
 
 interface CreateTaskProps {
   taskToEdit?: TaskFormData;
@@ -23,14 +15,6 @@ interface CreateTaskProps {
 }
 
 function CreateTask({ taskToEdit, isOpen }: CreateTaskProps) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
 
   type customErrors = {
     selectedDateError?: string;
@@ -326,6 +310,8 @@ useEffect(() => {
           onRepeatToggle={setRepeat}
           onSelectFinalDate={setFinalDate}
           onSelectFrequency={setFrequency}
+          minuteInterval={minuteInterval}
+          onChangeMinuteInterval={setMinuteInterval}
           onHandleAccess={setAccess}
           errors={{
             frequency: customErrors.frequency,

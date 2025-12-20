@@ -1,5 +1,4 @@
 import { Checkbox } from "./ui/checkbox";
-import { useState } from "react";
 import { Switch } from "./ui/switch";
 import DatePicker from "./datePicker";
 import { useEffect } from "react";
@@ -10,7 +9,9 @@ interface FrequencySelectionProps {
   onSelectFrequency: (value: Frequency | undefined) => void;
   onSelectFinalDate: (value: Date | undefined) => void;
   onHandleAccess: (value: boolean) => void;
+  onChangeMinuteInterval?: (value: number | string) => void;
   frequency: Frequency | undefined
+  minuteInterval: number | string
   repeat: boolean
   finalDate: Date | undefined
   access: boolean
@@ -20,7 +21,7 @@ interface FrequencySelectionProps {
   };
 }
 
-function FrequencySelection({frequency, repeat, finalDate, access, onHandleAccess, onRepeatToggle, onSelectFinalDate, onSelectFrequency, errors}: FrequencySelectionProps) {
+function FrequencySelection({frequency, repeat, finalDate, access, onHandleAccess, onRepeatToggle, onSelectFinalDate, onSelectFrequency, minuteInterval, onChangeMinuteInterval, errors}: FrequencySelectionProps) {
 
   useEffect(() => {
     if (!repeat) {
@@ -31,9 +32,10 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
 
   useEffect(() => {
   if (frequency?.type === "minutes") {
-    setMinuteInterval(String(frequency.interval))
+    onChangeMinuteInterval?.(frequency.interval)
+    // setMinuteInterval(String(frequency.interval))
   } else {
-    setMinuteInterval("")
+    onChangeMinuteInterval?.("")
   }
 }, [frequency])
 
@@ -63,7 +65,7 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
     onHandleAccess(true)
   }
 
-  const [minuteInterval, setMinuteInterval] = useState<number | string>("");
+  // const [minuteInterval, setMinuteInterval] = useState<number | string>("");
 
 
   return (
@@ -125,7 +127,7 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
               value={minuteInterval}
               onChange={(e) => {
                 const value = Number(e.target.value)
-                setMinuteInterval(value)
+                onChangeMinuteInterval?.(value)
                 if (value > 0) {
                   handleMinutesSelect(value)
                 }
