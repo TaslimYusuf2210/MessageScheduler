@@ -12,6 +12,7 @@ export type Frequency =
 export type Platform = "" | "gmail" | "whatsapp" | "telegram" | "slack";
 
 export interface TaskFormData {
+  id: string;
   selectedDate: string | undefined;
   time: string;
   recipients: Recipient[];

@@ -35,7 +35,7 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
 
     //   return
     // }
-    let frequency:Frequency = {type: option}
+    let frequency = {type: option}
     // if (option === "minutes") {
     //   frequency = {type: option, interval: interval}
     // }
@@ -53,15 +53,15 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
     console.log(frequency, finalDate);
   }
 
-  function handleMinutesSelect(interval: number) {
+  function handleMinutesSelect(intervalM: number) {
     onSelectFrequency({
     type: "minutes",
-    interval,
+    interval: intervalM
     })
     onHandleAccess(true)
   }
 
-  const [interval, setInterval] = useState<number | "">("");
+  const [intervalS, setIntervalS] = useState<number | "">("");
 
 
   return (
@@ -120,10 +120,10 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
               Every
               <input 
               min={1}
-              value={interval}
+              value={intervalS}
               onChange={(e) => {
                 const value = Number(e.target.value)
-                setInterval(value)
+                setIntervalS(value)
                 if (value > 0) {
                   handleMinutesSelect(value)
                 }

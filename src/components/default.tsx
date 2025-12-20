@@ -4,10 +4,18 @@ import { useState } from "react";
 import CreateTask from "./creatTask";
 import ViewTask from "./viewTask";
 import illustraion from "../assets/illustration.svg"
+import type { TaskFormData } from "@/types/frequency";
 
 function DefaultPage() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [modalContent, setModalContent] = useState("")
+    const [taskToEdit, setTaskToEdit] = useState<TaskFormData | undefined>();
+
+    function handleEdit(task: TaskFormData) {
+    setTaskToEdit(task);           // 1️⃣ store the task
+    setModalContent("createTask"); // 2️⃣ switch modal content
+    setIsModalOpen(true);          // 3️⃣ ensure modal is open
+    }
 
     function closeModal() {
         setIsModalOpen((prev) => !prev)
@@ -79,8 +87,15 @@ function DefaultPage() {
             maxWidth="w-[600px]"
             bgColor="bg-gray-50"
             >
-                {modalContent === "createTask" && <CreateTask />}
-                {modalContent === "viewTask" && <ViewTask />}
+                {modalContent === "createTask" && 
+                <CreateTask 
+                taskToEdit={taskToEdit}
+                // onSubmit={onsubmit}
+                />}
+                {modalContent === "viewTask" && 
+                <ViewTask 
+                onHandleEdit={handleEdit}
+                />}
             </Modal>
         </div>
      );

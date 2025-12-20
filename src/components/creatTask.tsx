@@ -16,7 +16,12 @@ const schema = yup.object().shape({
   messageTitle: yup.string().required("Password is required"),
 });
 
-function CreateTask() {
+interface CreateTaskProps {
+  taskToEdit?: TaskFormData;
+  // onSubmit: (task: TaskFormData) => void;
+}
+
+function CreateTask({ taskToEdit }: CreateTaskProps) {
   const {
     register,
     handleSubmit,
@@ -37,17 +42,6 @@ function CreateTask() {
     finalDate?: string;
   };
 
-//   interface TaskFormData {
-//   selectedDate: string | undefined;
-//   time: string;
-//   recipients: Recipient[];
-//   messageTitle: string;
-//   message: string;
-//   repeat?: boolean;
-//   frequency?: Frequency;
-//   endDate?: string | undefined;
-// }
-
   type Recipient = {
   platform: Platform;
   contact: string;
@@ -60,37 +54,8 @@ function CreateTask() {
   slack: "bg-red-500",
     };
 
-  // function normalizeData(data:TaskFormData) {
-  //   return {
-  //   ...data,
-  //   selectedDate: data.selectedDate
-  //     ? data.selectedDate.toISOString()
-  //     : null,
-  //   }
-  // }
-
-  // function storeMessage(data:TaskFormData, key:string) {
-  //   const existingData = getDatabase(key)
-  //   const updatedData = [
-  //       ...existingData,
-  //     data,
-  //   ]
-
-  //   localStorage.setItem(key, JSON.stringify(updatedData))
-  // }
-
-  // function getDatabase(key:string) {
-  //   const rawData = localStorage.getItem(key)
-  //   if (!rawData) {
-  //       console.log([])
-  //       return []
-  //   }
-  //   const data = JSON.parse(rawData)
-  //   return data
-  // }
-
   function handleAddRecipient() {
-    if (!platform) return
+    if (!platform || !contact.trim()) return
     setRecipient((prev) => [
         ...prev,
         {platform, contact},
@@ -136,6 +101,7 @@ function CreateTask() {
     if (Object.keys(newErrors).length > 0) return
 
     const formData: TaskFormData = {
+        id: taskToEdit?.id ?? crypto.randomUUID(),
         selectedDate: selectedDate?.toISOString(),
         time,
         recipients,
@@ -154,29 +120,22 @@ function CreateTask() {
     resetForm()
   }
 
-//   const [formData, setFormData] = useState({
-//     date: null as Date | null,
-//     time: "",
-//     recipient: "",
-//     message: "",
-//     messageTitle: ""
-//     })
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
+    taskToEdit?.selectedDate ? new Date(taskToEdit.selectedDate) : new Date()
   );
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState(taskToEdit?.time ?? "");
   const [platform, setPlatform] = useState<Platform>("")
-  const [recipients, setRecipient] = useState<Recipient[]>([]);
-  const [message, setMessage] = useState("")
-  const [messageTitle, setMessageTitle] = useState("")
+  const [recipients, setRecipient] = useState<Recipient[]>(taskToEdit?.recipients ?? []);
+  const [message, setMessage] = useState(taskToEdit?.message ?? "")
+  const [messageTitle, setMessageTitle] = useState(taskToEdit?.messageTitle ?? "")
   const [contact, setContact] = useState("");
-  const [frequency, setFrequency] = useState<Frequency | undefined>(undefined);
-  const [repeat, setRepeat] = useState(false);
-  const [finalDate, setFinalDate] = useState<Date | undefined>(new Date())
+  const [frequency, setFrequency] = useState<Frequency | undefined>(taskToEdit?.frequency ?? undefined);
+  const [repeat, setRepeat] = useState(taskToEdit?.repeat ?? false);
+  const [finalDate, setFinalDate] = useState<Date | undefined>(new Date(taskToEdit?.endDate ? new Date(taskToEdit.endDate) : new Date()))
   const [access, setAccess] = useState(false)
   
-
   const isEmailPlatform = platform === "gmail"
+  const isEditing = Boolean(taskToEdit);
 
   return (
     <div className="py-6 px-4">
@@ -279,7 +238,7 @@ function CreateTask() {
               onChange={(e) => setContact(e.target.value)}
               className="p-2 w-full rounded-md border border-gray-200"
             />
-            <button onClick={handleAddRecipient}  className="bg-green-400 rounded-md text-white py-2 px-4 font-medium">
+            <button type="button" onClick={handleAddRecipient} className="bg-green-400 rounded-md text-white py-2 px-4 font-medium">
               Add
             </button>
           </div>
@@ -325,7 +284,7 @@ function CreateTask() {
             Cancel
           </button>
           <button type="submit" className="border py-1 px-4 rounded-2xl bg-green-500 text-white cursor-pointer hover:bg-green-600">
-            Add Schedule
+            {isEditing ? "Update Schedule" : "Add Schedule"}
           </button>
         </div>
       </form>
