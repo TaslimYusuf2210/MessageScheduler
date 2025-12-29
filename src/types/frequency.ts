@@ -22,3 +22,8 @@ export interface TaskFormData {
   frequency?: Frequency;
   endDate?: string | undefined;
 }
+
+export type PlatformConfig = {
+  color: string
+  name: string
+}

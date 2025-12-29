@@ -35,3 +35,7 @@ export function storeMessage(data:TaskFormData, key:string) {
 
   setDatabase(updated, key);
   }
+
+  export function clearDatabase(key:string, e:undefined[]) {
+    localStorage.setItem(key, JSON.stringify(e))
+  }

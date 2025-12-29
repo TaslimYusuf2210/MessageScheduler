@@ -1,8 +1,14 @@
 import type { Recipient } from "@/types/frequency"
 import type { Frequency } from "@/types/frequency"
+import type { PlatformConfig } from "@/types/frequency"
+import type { Platform } from "@/types/frequency"
+import type { TaskFormData } from "@/types/frequency"
+import { useState } from "react"
+
 
 interface viewTaskCardProps {
     id: string
+    task: TaskFormData
     title: string
     message: string
     recipients: Recipient[]
@@ -14,7 +20,7 @@ interface viewTaskCardProps {
     onEdit: (task: string) => void;
 }
 
-function ViewTaskCard({title, message, recipients, startDate, time, frequency, endDate, id, onDelete, onEdit}: viewTaskCardProps) {
+function ViewTaskCard({task, title, message, recipients, startDate, time, frequency, endDate, id, onDelete, onEdit}: viewTaskCardProps) {
     function formatFrequency(frequency: Frequency) {
     switch (frequency.type) {
         case "minutes":
@@ -26,12 +32,30 @@ function ViewTaskCard({title, message, recipients, startDate, time, frequency, e
     }
     }
 
-    const platformColors: Record<string, string> = {
-        gmail: "bg-gray-800",
-        whatsapp: "bg-green-400",
-        telegram: "bg-blue-500",
-        slack: "bg-red-500",
+    const platformColors: Record<Platform, PlatformConfig> = {
+        gmail: {
+            color: "bg-gray-800",
+            name: "Gmail"
+        },
+        whatsapp: {
+            color: "bg-green-400",
+            name: "Whatsapp"
+        },
+        telegram: {
+            color: "bg-blue-500",
+            name: "Telegram"
+        },
+        slack: {
+            color: "bg-red-500",
+            name: "Slack"
+        },
+        "": {
+            color: "",
+            name: ""
+        }
     };
+
+    const [displayPlatform, setDisplayPlatform] = useState(false)
 
     return ( 
         <div className="bg-white rounded-xl p-2 w-full space-y-2">
@@ -91,10 +115,28 @@ function ViewTaskCard({title, message, recipients, startDate, time, frequency, e
                 {recipients.map((item, index) => (
                     <span
                     key={index}
-                    className={`text-white font-medium text-sm px-3 py-1 rounded-full ${platformColors[item.platform]}`}
+                    className={`text-white relative flex flex-col text-sm items-end transition duration-500 `}
                     >
-                        {item.contact}
-                    </span>
+                        <span 
+                        onMouseEnter={() => setDisplayPlatform(true)}
+                        onMouseLeave={() => setDisplayPlatform(false)}
+                        className={`px-3 py-1 rounded-full text-white cursor-pointer transition duration-300 ${platformColors[item.platform].color}`}
+                        >
+                        {item.contact}  
+                        </span>
+                        <span
+                            className={`
+                            absolute top-full mt-1
+                            bg-white text-black text-xs px-2 py-1 rounded shadow
+                            transition-all duration-300 ease-out
+                            ${displayPlatform
+                                ? "opacity-100 translate-y-0"
+                                : "opacity-0 -translate-y-2 pointer-events-none"}
+                            `}
+                        >
+                            {platformColors[item.platform].name}
+                        </span>                    
+                </span>
                 ))
                 }
             </div>
@@ -102,8 +144,8 @@ function ViewTaskCard({title, message, recipients, startDate, time, frequency, e
                 <span onClick={() => onDelete(id)} className="text-red-400 cursor-pointer">
                     <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    width="30" 
-                    height="30" 
+                    width="24" 
+                    height="24" 
                     viewBox="0 0 24 24"
                     >
                     <path 
@@ -111,17 +153,17 @@ function ViewTaskCard({title, message, recipients, startDate, time, frequency, e
                     d="M7.616 20q-.672 0-1.144-.472T6 18.385V6H5V5h4v-.77h6V5h4v1h-1v12.385q0 .69-.462 1.153T16.384 20zM17 6H7v12.385q0 .269.173.442t.443.173h8.769q.23 0 .423-.192t.192-.424zM9.808 17h1V8h-1zm3.384 0h1V8h-1zM7 6v13z"/>
                     </svg>
                 </span>
-                <span onClick={() => onEdit(id)} className="flex items-center p-2 rounded-xl space-x-1 bg-green-400 text-white cursor-pointer">
+                <span onClick={() => onEdit(id)} className="flex items-center py-1 px-2 rounded-md space-x-1 bg-green-400 text-white cursor-pointer">
                     <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    width="24" 
-                    height="24" 
+                    width="18" 
+                    height="18" 
                     viewBox="0 0 24 24">
                     <path 
                     fill="currentColor" 
                     d="m14.06 9.02l.92.92L5.92 19H5v-.92zM17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83a.996.996 0 0 0 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"/>
                     </svg>
-                    <span className="text-lg font-medium">
+                    <span className=" font-medium">
                         Edit
                     </span>
                 </span>
