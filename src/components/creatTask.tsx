@@ -11,10 +11,10 @@ import type { TaskFormData } from "@/types/frequency";
 interface CreateTaskProps {
   taskToEdit?: TaskFormData;
   isOpen: boolean;
-  // onSubmit: (task: TaskFormData) => void;
+  closeModal: () => void;
 }
 
-function CreateTask({ taskToEdit, isOpen }: CreateTaskProps) {
+function CreateTask({ taskToEdit, isOpen, closeModal}: CreateTaskProps) {
 
   type customErrors = {
     selectedDateError?: string;
@@ -86,6 +86,11 @@ useEffect(() => {
     setRepeat(false)
     setFinalDate(undefined)
     }
+
+  function onCancel () {
+    resetForm()
+    closeModal()
+  }
 
 
   const [customErrors, setCustomErrors] = useState<customErrors>({});
@@ -321,7 +326,7 @@ useEffect(() => {
           </FrequencySelection>
         </div>
         <div className="border border-white pt-4 border-t-gray-200 flex justify-between">
-          <button type="button" className="border border-red-600 py-1 px-4 rounded-2xl bg-white text-red-500 hover:text-white hover:bg-red-600 cursor-pointer">
+          <button onClick={onCancel} type="button" className="border border-red-600 py-1 px-4 rounded-2xl bg-white text-red-500 hover:text-white hover:bg-red-600 cursor-pointer">
             Cancel
           </button>
           <button type="submit" className="border py-1 px-4 rounded-2xl bg-green-500 text-white cursor-pointer hover:bg-green-600">

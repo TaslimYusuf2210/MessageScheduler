@@ -51,14 +51,19 @@ function DefaultPage() {
                 Add Task
                 </Button>
             </div>
-            <div className="flex justify-evenly items-center border rounded-lg border-gray-300 py-1">
-                <p className="font-medium">Time</p>
-                <hr className="border w-6 rotate-90 "/>
-                <p className="font-medium">Date</p>
-                <hr className="border w-6 rotate-90 "/>
-                <p className="font-medium">Task Title</p>
-                <hr className="border w-6 rotate-90 "/>
-                <p className="font-medium">Repeat</p>
+            <div className="relative w-full h-8 overflow-hidden border rounded-lg border-gray-300 py-1">
+                <div
+                    className="flex hover:[animation-play-state:paused] w-max gap-12 news-ticker text-black whitespace-nowrap pointer-events-none absolute inset-0 h-full"
+                >
+                    <span>🔥 Breaking News: Message Scheduler is Live</span>
+                    <span>🚀 Schedule WhatsApp, Email, Slack & Telegram Messages</span>
+                    <span>⏰ Never Forget Important Messages Again</span>
+
+                    {/* duplicate content for smooth loop */}
+                    <span>🔥 Breaking News: Message Scheduler is Live</span>
+                    <span>🚀 Schedule WhatsApp, Email, Slack & Telegram Messages</span>
+                    <span>⏰ Never Forget Important Messages Again</span>
+                </div>
             </div>
             <div className="grid place-items-center font-medium space-y-5">
                 <div className="animate-pulse">
@@ -93,6 +98,7 @@ function DefaultPage() {
                 <CreateTask 
                 isOpen={isModalOpen}
                 taskToEdit={taskToEdit}
+                closeModal={closeModal}
                 // onSubmit={onsubmit}
                 />}
                 {modalContent === "viewTask" && 
