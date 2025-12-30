@@ -2,13 +2,11 @@ import type { Recipient } from "@/types/frequency"
 import type { Frequency } from "@/types/frequency"
 import type { PlatformConfig } from "@/types/frequency"
 import type { Platform } from "@/types/frequency"
-import type { TaskFormData } from "@/types/frequency"
 import { useState } from "react"
 
 
 interface viewTaskCardProps {
     id: string
-    task: TaskFormData
     title: string
     message: string
     recipients: Recipient[]
@@ -20,7 +18,7 @@ interface viewTaskCardProps {
     onEdit: (task: string) => void;
 }
 
-function ViewTaskCard({task, title, message, recipients, startDate, time, frequency, endDate, id, onDelete, onEdit}: viewTaskCardProps) {
+function ViewTaskCard({title, message, recipients, startDate, time, frequency, endDate, id, onDelete, onEdit}: viewTaskCardProps) {
     function formatFrequency(frequency: Frequency) {
     switch (frequency.type) {
         case "minutes":

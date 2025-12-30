@@ -42,7 +42,6 @@ function ViewTask({onHandleEdit}: ViewTaskProps) {
                         Database.map((item, index) => (
                         <ViewTaskCard
                         key={index}
-                        task={item}
                         title={item.messageTitle}
                         message={item.message}
                         startDate={item.selectedDate}
