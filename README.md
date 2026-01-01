@@ -1,69 +1,56 @@
-# React + TypeScript + Vite
+# Message Scheduler
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple and intuitive web application for scheduling automated messages across multiple platforms: WhatsApp, Email (Gmail), Slack, and Telegram.
 
-Currently, two official plugins are available:
+Perfect for reminders, birthday wishes, marketing campaigns, or recurring notifications — send messages at the exact date/time you choose, or set them to repeat daily, weekly, monthly, or at custom intervals.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Multi-Platform Support**: Schedule messages for WhatsApp, Gmail, Slack, and Telegram in one place.
+- **One-Time or Recurring Schedules**: Send once on a specific date/time or repeat daily, weekly, monthly, or every X minutes.
+- **Flexible Recipients**: Add multiple recipients easily (phone numbers for WhatsApp, etc.).
+- **Task Management**: View, edit, delete, and monitor active/scheduled tasks.
+- **Clean Modal-Based UI**: Add and schedule messages through intuitive dialogs with clear sections for date, time, message content, and platform selection.
+- **Live Status Updates**: Real-time feedback on what's new about the web app".
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Frontend**: React + Vite, Tailwind CSS
+- **UI Components**: Shadcn UI for beautiful, accessible components (Select, Dialog, Input, Buttons, etc.)
+- **State Management**: React hooks
+- **Local Storage**: Use local storage to serve as a temporary database.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Screenshots
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+![Home Screen](screenshots/home.png)  
+*Empty state with "Add Task" and "View Task List" prompt*
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+![Active Task Modal](screenshots/active-task.png)  
+*View and manage running/scheduled tasks*
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+![Platform & Recipients](screenshots/platform-recipients.png)  
+*Select platform and add recipients*
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+![Repeat & Schedule Options](screenshots/repeat-schedule.png)  
+*Configure recurrence and final day*
+
+![Schedule Message Dialog](screenshots/schedule-dialog.png)  
+![Schedule Message Dialog 2](screenshots/schedule-dialog(2).png)
+*Full message composition modal*
+
+## Installation & Setup (Local Development)
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/TaslimYusuf2210/MessageScheduler.git
+
+2. Install dependencies:
+Bash
+npm install
+# or yarn / pnpm
+
+3. Run the development server:
+Bash
+npm run dev
+
+4. Open http://localhost:3000

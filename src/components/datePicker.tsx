@@ -55,7 +55,7 @@ function DatePicker({ className = "", onDateChange, disabled = false, dateValue 
           </button>
         </PopoverTrigger>
         {!disabled &&
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent className="w-auto p-0 bg-white">
             <Calendar
               mode="single"
               selected={dateValue}

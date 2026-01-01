@@ -18,7 +18,7 @@ export type Platform = "" | "gmail" | "whatsapp" | "telegram" | "slack";
 
 function SelectPlatform( { value, onPlatformChange }:PlatformSelectProps) {
     return ( 
-        <div className="border rounded-md py-1">
+        <div className="border border-gray-200 rounded-md py-1">
                     <Select
                     value={value}
                     onValueChange={onPlatformChange}
@@ -26,7 +26,7 @@ function SelectPlatform( { value, onPlatformChange }:PlatformSelectProps) {
             <SelectTrigger className="w-full text-base border-none">
                 <SelectValue placeholder="Select a platform" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
                 <SelectGroup>
                 <SelectLabel>Platforms</SelectLabel>
                 <SelectItem value="gmail">Gmail</SelectItem>

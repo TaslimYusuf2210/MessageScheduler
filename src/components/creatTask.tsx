@@ -135,6 +135,7 @@ useEffect(() => {
 
     storeMessage(formData, "scheduledMessage")
     console.log(formData)
+    alert("Message Successfully Scheduled")
     resetForm()
   }
 
@@ -230,7 +231,7 @@ useEffect(() => {
             </p>
           )}
         </div>
-        <div className="flex flex-col text-left w-full">
+        <div className="flex flex-col text-left z-999 w-full">
           <label className="font-medium">Platform</label>
           <SelectPlatform
           value={platform}
