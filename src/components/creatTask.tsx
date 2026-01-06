@@ -66,7 +66,6 @@ useEffect(() => {
         ...prev,
         {platform, contact},
     ])
-    console.log(recipients);
     setContact("")
   }
 
@@ -134,7 +133,6 @@ useEffect(() => {
     }
 
     storeMessage(formData, "scheduledMessage")
-    console.log(formData)
     alert("Message Successfully Scheduled")
     resetForm()
   }

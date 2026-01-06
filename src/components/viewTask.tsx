@@ -12,7 +12,6 @@ interface ViewTaskProps {
 function ViewTask({onHandleEdit}: ViewTaskProps) {
 
     function handleDelete(id:string) {
-        console.log("Delete:", id)
             deleteMessage("scheduledMessage", id)
         const updatedDatabase = Database?.filter(item => item.id !== id)
         setDataBase(updatedDatabase)
@@ -25,9 +24,7 @@ function ViewTask({onHandleEdit}: ViewTaskProps) {
     const [Database, setDataBase] = useState<TaskFormData[]>()
     useEffect(() => {
         const data = getDatabase("scheduledMessage")
-        console.log(data)
         setDataBase(data)
-        console.log(Database)
     }, [])
     return ( 
         <div className="py-10 px-4 text-left space-y-2">

@@ -4,6 +4,8 @@ A simple and intuitive web application for scheduling automated messages across 
 
 Perfect for reminders, birthday wishes, marketing campaigns, or recurring notifications — send messages at the exact date/time you choose, or set them to repeat daily, weekly, monthly, or at custom intervals.
 
+**Live Demo:** [messagescheduler.netlify.app]
+
 ## Features
 
 - **Multi-Platform Support**: Schedule messages for WhatsApp, Gmail, Slack, and Telegram in one place.

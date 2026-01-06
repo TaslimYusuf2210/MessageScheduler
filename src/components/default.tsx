@@ -24,7 +24,6 @@ function DefaultPage() {
     }
 
     function handleOpenModal(modal: string) {
-        console.log("working");
         
         setIsModalOpen(true)
         setModalContent(modal)

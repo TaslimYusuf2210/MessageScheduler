@@ -33,7 +33,6 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
   useEffect(() => {
   if (frequency?.type === "minutes") {
     onChangeMinuteInterval?.(frequency.interval)
-    // setMinuteInterval(String(frequency.interval))
   } else {
     onChangeMinuteInterval?.("")
   }
@@ -54,7 +53,6 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
     if (!repeat) {
       onHandleAccess(false)
     }
-    console.log(frequency, finalDate);
   }
 
   function handleMinutesSelect(intervalparams: number | string) {
@@ -77,8 +75,12 @@ function FrequencySelection({frequency, repeat, finalDate, access, onHandleAcces
             checked={repeat}
             onCheckedChange={handleRepeat}
             className="
-                            data-[state=checked]:bg-green-500
-                            "
+             border
+    bg-white cursor-pointer
+    data-[state=checked]:bg-green-500
+    data-[state=unchecked]:bg-gray-200
+    [&>span]:bg-gray-500
+            "
           ></Switch>
         </div>
         <div className="text-left space-y-2 sm:block grid grid-cols-2 gap-2">
